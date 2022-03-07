@@ -130,6 +130,7 @@ nav .logo-container .text-logo-green {
 	flex-direction: column;
 }
 
+.auth-modal input[type=text],
 .auth-modal input[type=email],
 .auth-modal input[type=password] {
 	padding: 8px;

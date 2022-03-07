@@ -58,6 +58,16 @@ const Onboarding = () => {
 							value={ formData.first_name }
 							onChange={ handleChange }
 						/>
+						<label htmlFor="last_name">Last Name</label>
+						<input
+							id="last_name"
+							type="text"
+							name="last_name"
+							placeholder="Last Name"
+							required={ true }
+							value={ formData.first_name }
+							onChange={ handleChange }
+						/>
 
 						<label>Birthday</label>
 						<div className="mul-input-container">

@@ -1,0 +1,40 @@
+* Packages installed for backend
+
+- nodemon
+Monitor for any changes in node.js application and automatically restart the server
+
+- express
+Fast, unopinionated, minimalist web framework for node
+
+- cors
+CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options
+To communicate with the backend
+
+- mongodb
+Database
+
+- Mongoose
+An Object Data Modeling (ODM) library for MongoDB and Node.js. It manages relationships between data, provides schema validation, and is used to translate between objects in code and the representation of those objects in MongoDB.
+
+- dotenv
+Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology
+Store
+To store variables secrately
+
+- bcrypt
+To hash password
+
+- uuid
+To generate an unique identifier
+
+- validator
+To validate forms inputs
+
+- nodemailer
+To send a comfirmation email
+
+- jsonwebtoken
+To synchronise sign in, login as an existing user
+
+- axios
+Promise based HTTP client for the browser and node.js
