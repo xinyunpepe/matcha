@@ -1,6 +1,7 @@
 import Home from './pages/home';
 import Dashboard from './pages/dashboard';
 import Onboarding from './pages/onboarding';
+import Welcome from './pages/welcome';
 
 // route between pages
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -12,7 +13,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={ <Home/> }/>
         <Route path="/dashboard" element={ <Dashboard/> }/>
-        <Route path="/Onboarding" element={ <Onboarding/> }/>
+        <Route path="/onboarding" element={ <Onboarding/> }/>
+        <Route path="/welcome" element={ <Welcome/> }/>
+        {/* <Route path="/confirm/:confirmCode" element={ <Welcome/> } /> */}
       </Routes>
     </BrowserRouter>
   );

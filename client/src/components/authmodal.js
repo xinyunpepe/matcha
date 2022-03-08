@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import validator from 'validator';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 const AuthModal = ({ setShowModal, isSignup }) => {
 	// init the form to null
@@ -12,7 +12,7 @@ const AuthModal = ({ setShowModal, isSignup }) => {
 	const [error, setError] = useState(null);
 
 	// init navigate
-	let navigate = useNavigate();
+	// let navigate = useNavigate();
 
 	// console.log(username, email, password, confirmPassword);
 
@@ -45,19 +45,9 @@ const AuthModal = ({ setShowModal, isSignup }) => {
 				setError("Passwords don't match");
 				return ;
 			}
+			setError("Please check your email and active your account");
 			// post data to the backend
 			await axios.post('http://localhost:8000/signup', { username, email, password });
-
-			// redirect to onboarding page if success
-			// const success = response.status === 200;
-			// console.log(success);
-
-			const response = await axios.get('http://localhost:8000/confirm/');
-			const success = response.status === 200;
-
-			if (success) {
-				navigate ('/onboarding');
-			}
 		}
 		catch (error) {
 			console.log(error);
