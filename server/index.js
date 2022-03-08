@@ -111,7 +111,6 @@ app.get('/confirm/:confirmCode', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
-	const { email, password } = req.body;
 	userModel.findOne({ email: req.body.email })
 		.then((users) => {
 			// console.log(users);
