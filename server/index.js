@@ -87,7 +87,7 @@ app.post('/signup', (req, res) => {
 
 // app.get('/confirm/:confirmCode', controller.verifyUser);
 app.get('/confirm/:confirmCode', (req, res) => {
-	userModel.findOne({ confirm_code: req.params.confirmCode, })
+	userModel.findOne({ confirm_code: req.params.confirmCode })
 		.then((users) => {
 			// console.log(users);
 			if (!users) {
@@ -102,7 +102,7 @@ app.get('/confirm/:confirmCode', (req, res) => {
 					return;
 				}
 				console.log("User is actived successfully");
-				return res.status(200).redirect('http://localhost:3000/welcome');
+				res.status(200).redirect('http://localhost:3000/welcome');
 			});
 		})
 		.catch((err) => {
@@ -110,6 +110,31 @@ app.get('/confirm/:confirmCode', (req, res) => {
 		});
 })
 
+app.post('/login', (req, res) => {
+	const { email, password } = req.body;
+	userModel.findOne({ email: req.body.email })
+		.then((users) => {
+			// console.log(users);
+			if (!users) {
+				return res.status(404).json({ message: "User not found" });
+			}
+			const correctPassword = bcrypt.compareSync(req.body.password, users.hashed_password);
+			if (!correctPassword) {
+				return res.status(404).json({ message: "Invalid password" });
+			}
+			if (users.status != "Active") {
+				return res.status(401).json({ message: "Pending Account. Please verify your Email" });
+			}
+			// const token = jwt.sign(email, {
+			// 	expiresIn: 60 * 24
+			// })
+			console.log("User is logged in successfully");
+			res.status(200).json( 'ok' );
+		})
+		.catch((err) => {
+			console.log("Error: ", err)
+		});
+})
 
 // listener
 app.listen(port, () => {

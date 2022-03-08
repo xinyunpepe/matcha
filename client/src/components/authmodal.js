@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import validator from 'validator';
 import axios from 'axios';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const AuthModal = ({ setShowModal, isSignup }) => {
 	// init the form to null
@@ -12,7 +12,7 @@ const AuthModal = ({ setShowModal, isSignup }) => {
 	const [error, setError] = useState(null);
 
 	// init navigate
-	// let navigate = useNavigate();
+	let navigate = useNavigate();
 
 	// console.log(username, email, password, confirmPassword);
 
@@ -25,29 +25,34 @@ const AuthModal = ({ setShowModal, isSignup }) => {
 		// prevent from refreshing the page
 		e.preventDefault();
 		try {
-			// check if username if valid
-			if (isSignup && !validator.isAlphanumeric(username)) {
-				setError("Incorrect username, only letters and numbers are allowed");
-				return ;
+			if (isSignup) {
+				if (!validator.isAlphanumeric(username)) {
+					setError("Incorrect username, only letters and numbers are allowed");
+					return ;
+				}
+				else if (isSignup && !validator.isEmail(email)) {
+					setError("Incorrect email address");
+					return ;
+				}
+				else if (isSignup && !validator.isStrongPassword(password)) {
+					setError("Password minimum length 8, needs to contain at least one lowercase, one uppercase letter, one number and one symbol");
+					return ;
+				}
+				else if (password !== confirmPassword) {
+					setError("Passwords don't match");
+					return ;
+				}
+				setError("Please check your email and active your account");
+				// post data to the backend
+				await axios.post('http://localhost:8000/signup', { username, email, password });
 			}
-			// check if email is valid
-			if (isSignup && !validator.isEmail(email)) {
-				setError("Incorrect email address");
-				return ;
+			else {
+				const response = await axios.post('http://localhost:8000/login', { email, password });
+				const success = response.status === 200;
+				if (success) {
+					navigate('/onboarding');
+				}
 			}
-			// check if password is valid
-			if (isSignup && !validator.isStrongPassword(password)) {
-				setError("Password minimum length 8, needs to contain at least one lowercase, one uppercase letter, one number and one symbol");
-				return ;
-			}
-			// check if passwords match
-			if (isSignup && (password !== confirmPassword)) {
-				setError("Passwords don't match");
-				return ;
-			}
-			setError("Please check your email and active your account");
-			// post data to the backend
-			await axios.post('http://localhost:8000/signup', { username, email, password });
 		}
 		catch (error) {
 			console.log(error);
@@ -60,14 +65,15 @@ const AuthModal = ({ setShowModal, isSignup }) => {
 			<h2>{ isSignup ? 'CREATE ACCOUNT' : 'LOG IN' }</h2>
 			<p>By clicking Log In, you agree to our terms. Learn how we process your data in our Privacy Policy and Cookie Policy.</p>
 			<form onSubmit={ handleSubmit }>
-				<input
+				{/* only showes username in case of sign up */}
+				{isSignup && <input
 					type="text"
 					id="username"
 					name="username"
 					placeholder="username"
 					required={ true }
 					onChange={(e) => setUsername(e.target.value)}
-				/>
+				/>}
 				<input
 					type="email"
 					id="email"
