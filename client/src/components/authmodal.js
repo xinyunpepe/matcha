@@ -2,6 +2,8 @@ import { useState } from 'react';
 import validator from 'validator';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import signUp from '../services/authservice';
 
 const AuthModal = ({ setShowModal, isSignup }) => {
 	// init the form to null
@@ -10,6 +12,7 @@ const AuthModal = ({ setShowModal, isSignup }) => {
 	const [password, setPassword] = useState(null);
 	const [confirmPassword, setConfirmPassword] = useState(null);
 	const [error, setError] = useState(null);
+	const [cookies, setCookie, removeCookie] = useCookies(['user']);
 
 	// init navigate
 	let navigate = useNavigate();
@@ -30,11 +33,11 @@ const AuthModal = ({ setShowModal, isSignup }) => {
 					setError("Incorrect username, only letters and numbers are allowed");
 					return ;
 				}
-				else if (isSignup && !validator.isEmail(email)) {
+				else if (!validator.isEmail(email)) {
 					setError("Incorrect email address");
 					return ;
 				}
-				else if (isSignup && !validator.isStrongPassword(password)) {
+				else if (!validator.isStrongPassword(password)) {
 					setError("Password minimum length 8, needs to contain at least one lowercase, one uppercase letter, one number and one symbol");
 					return ;
 				}
@@ -48,14 +51,31 @@ const AuthModal = ({ setShowModal, isSignup }) => {
 			}
 			else {
 				const response = await axios.post('http://localhost:8000/login', { email, password });
-				const success = response.status === 200;
+				// if (response.status === 400) {
+				// 	setError("Invalid password");
+				// 	return ;
+				// }
+				// else if (response.status === 401) {
+				// 	setError("Pending Account. Please verify your Email");
+				// 	return ;
+				// }
+				// else if (response.status === 404) {
+				// 	setError("User not found");
+				// 	return ;
+				// }
+				// else if (response.status === 201) {
+				// 	navigate('/dashboard');
+				// }
+				const success = response.status === 201;
 				if (success) {
-					navigate('/onboarding');
+					navigate('/dashboard');
 				}
+
+				window.location.reload();
 			}
 		}
-		catch (error) {
-			console.log(error);
+		catch (err) {
+			console.log(err);
 		}
 	}
 
