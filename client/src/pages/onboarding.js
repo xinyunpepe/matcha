@@ -1,7 +1,7 @@
 import Nav from "../components/nav";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate, userNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 const Onboarding = () => {

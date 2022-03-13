@@ -29,3 +29,23 @@ module.exports.sendConfirmEmail = (username, email, emailToken) => {
 	})
 }
 
+module.exports.resetPasswordEmail = (email, passwordToken) => {
+	transport.sendMail({
+		from: process.env.EMAIL,
+		to: email,
+		subject: "Please reset your password",
+		html: `<h1>Reset Password</h1>
+		<h2>Hello</h2>
+		<p>Please reset your password by clicking on the following link</p>
+		<a href=http://localhost:8000/resetpassword/${ passwordToken }> Click here</a>
+		<p>Link is valid for 30 minutes</p>
+		</div>`,
+	})
+	.then(() => {
+		console.log('Reset password email sent successfully');
+	})
+	.catch(err => {
+		console.log("Error: ", err);
+	})
+}
+

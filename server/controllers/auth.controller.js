@@ -1,4 +1,5 @@
 const userModel = require('../models/user.model');
+const resetPasswordModel = require('../models/resetpassword.model');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
@@ -8,12 +9,12 @@ exports.signup = (req, res) => {
 	const { username, email, password } = req.body;
 	userModel.findOne({ username }).exec((err, users) => {
 		if (users) {
-			return res.status(400).json({ error: 'User exists already'});
+			return res.status(400).json({ error: 'User exists already' });
 		}
 	})
 	userModel.findOne({ email }).exec((err, users) => {
 		if (users) {
-			return res.status(400).json({ error: 'Email exists already'});
+			return res.status(400).json({ error: 'Email exists already' });
 		}
 	})
 
@@ -32,20 +33,16 @@ exports.signup = (req, res) => {
 			res.status(500).json({ message: err });
 			return;
 		}
-		nodemailer.sendConfirmEmail(
-			username,
-			email,
-			emailToken
-		);
-		return res.json({ message: "Please check your email" });
 	});
+	nodemailer.sendConfirmEmail(username, email, emailToken);
+	res.send(data);
 }
 
 exports.activeUser = (req, res) => {
 	userModel.findOne({ confirm_code: req.params.confirmCode })
 		.then((users) => {
 			if (!users) {
-				return res.status(404).json({ message: "User Not found." });
+				return res.status(404).json({ message: "User Not found" });
 			}
 			// console.log(users);
 			users.status = "Active";
@@ -56,15 +53,14 @@ exports.activeUser = (req, res) => {
 					return;
 				}
 				console.log('User is signed up successfully');
-
-				// cookie
-				const cookieToken = jwt.sign({ email: users.email }, process.env.COOKIE_TOKEN, {
-					expiresIn: 60 * 24,
-				});
-				res.cookie('CookieToken', cookieToken, { expire: Date.now() + 60 * 24 });
-				res.cookie('UserId', users.user_id);
-				res.redirect('http://localhost:3000/onboarding');
 			});
+			// cookie
+			const cookieToken = jwt.sign({ email: users.email }, process.env.COOKIE_TOKEN, {
+				expiresIn: 60 * 24,
+			});
+			res.cookie('CookieToken', cookieToken, { expire: Date.now() + 60 * 24 });
+			res.cookie('UserId', users.user_id);
+			res.redirect('http://localhost:3000/onboarding');
 		})
 		.catch((err) => {
 			console.log("error", err);
@@ -89,10 +85,80 @@ exports.login = (req, res) => {
 				expiresIn: 60 * 24
 			})
 			console.log("User is logged in successfully");
-			return res.status(201).json({ accessToken, email: users.email });
+			return res.status(201).json({ accessToken, userId: users.user_id });
 		})
 		.catch((err) => {
 			console.log("Error: ", err)
+		});
+}
+
+exports.resetPassword = (req, res) => {
+	userModel.findOne({ email: req.body.email })
+		.then((users) => {
+			// console.log(users);
+			if (!users) {
+				return res.status(404).json({ message: "User not found" });
+			}
+			const userId = users.user_id;
+			const passwordToken = jwt.sign({ email: req.body.email }, process.env.PASSWORD_TOKEN);
+
+			const data = new resetPasswordModel({
+				user_id: userId,
+				email: req.body.email,
+				token: passwordToken
+			});
+			data.save((err) => {
+				if (err) {
+					res.status(500).json({ message: err });
+					return;
+				}
+			});
+			nodemailer.resetPasswordEmail(req.body.email, passwordToken);
+			res.send(data);
+		})
+		.catch((err) => {
+			console.log("Error: ", err)
+		});
+}
+
+
+exports.verifyPassword = (req, res) => {
+	resetPasswordModel.findOne({ token: req.params.passwordCode })
+		.then((resetPasswords) => {
+			if (!resetPasswords) {
+				return res.status(404).json({ message: "Link expired already" });
+			}
+			const cookieToken = jwt.sign({ owner: resetPasswords.owner }, process.env.COOKIE_TOKEN, {
+				expiresIn: 30,
+			});
+			res.cookie('CookieToken', cookieToken, { expire: Date.now() + 30 });
+			res.cookie('UserId', resetPasswords.user_id);
+			res.redirect('http://localhost:3000/resetpassword');
+		})
+		.catch((err) => {
+			console.log("error", err);
+		});
+}
+
+exports.updatePassword = (req, res) => {
+	userModel.findOne({ user_id: req.body.userId })
+		.then((users) => {
+			if (!users) {
+				return res.status(404).json({ message: "User Not found." });
+			}
+			users.password = bcrypt.hashSync(req.body.password, 10);
+			users.save((err) => {
+				if (err) {
+					console.log("Error in updating password");
+					res.status(500).json({ message: err });
+					return;
+				}
+				console.log('Password is updated successfully');
+			});
+			res.send(users);
+		})
+		.catch((err) => {
+			console.log("error", err);
 		});
 }
 
@@ -124,9 +190,8 @@ exports.updateUser = (req, res) => {
 					return;
 				}
 				console.log('User is updated successfully');
-				// get response status from the front end
-				res.send(users);
 			});
+			res.send(users);
 		})
 		.catch((err) => {
 			console.log("error", err);
