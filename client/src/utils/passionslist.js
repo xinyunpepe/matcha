@@ -1,16 +1,15 @@
 export const passionsList = [
 	"Sport",
-	"Vegetarian",
-	"LGBTQ+Rights",
 	"Art",
+	"Food",
 	"Music",
-	"Brunch",
-	"Instagram",
 	"Language",
 	"Shopping",
+	"Wine",
 	"Politics",
 	"Travel",
-	"Wine",
-	"Nexflix"
+	"Cinema",
+	"Chill",
+	"Netflix"
 ]
 

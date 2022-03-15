@@ -219,21 +219,6 @@ const Onboarding = () => {
 							<label htmlFor="everyone-interest">Everyone</label>
 						</div>
 
-						<label htmlFor="about">About Me</label>
-						<input
-							id="about"
-							type="text"
-							name="about"
-							required={ true }
-							placeholder="I like matcha icecream.."
-							value={ formData.about }
-							onChange={ handleChange }
-						/>
-
-						<input type="submit"/>
-					</section>
-
-					<section>
 						<label htmlFor="passions">My Passions</label>
 						<input readOnly
 							type="text"
@@ -256,6 +241,21 @@ const Onboarding = () => {
 							)
 						})}
 						</div>
+
+						<input type="submit"/>
+					</section>
+
+					<section>
+						<label htmlFor="about">About Me</label>
+						<input
+							id="about"
+							type="text"
+							name="about"
+							required={ true }
+							placeholder="I like matcha icecream.."
+							value={ formData.about }
+							onChange={ handleChange }
+						/>
 						<label htmlFor="url">Profile Photo</label>
 							<input
 								id="url"
