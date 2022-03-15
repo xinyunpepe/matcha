@@ -200,6 +200,7 @@ nav .logo-container .text-logo-green {
 .onboarding form .mul-input-container {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
 }
 
 .onboarding form .mul-input-container input {
@@ -214,7 +215,8 @@ nav .logo-container .text-logo-green {
 	margin-right: 10px;
 }
 
-.onboarding form input[type="radio"] {
+.onboarding form input[type="radio"],
+.onboarding form .mul-input-container input[type="checkbox"] {
 	display: none;
 }
 
@@ -222,12 +224,13 @@ nav .logo-container .text-logo-green {
 	width: 10%;
 }
 
-.onboarding form input[type="radio"]:checked + label {
+.onboarding form input[type="radio"]:checked + label,
+.onboarding form .mul-input-container input[type="checkbox"]:checked + label {
 	border: solid 2px rgb(116, 161, 46);
 }
 
 .onboarding form input[type="submit"]:hover {
-	background-color: rgb(235, 235 235);
+	background-color: rgb(235, 235, 235);
 }
 
 .onboarding form input[type="submit"]:active {

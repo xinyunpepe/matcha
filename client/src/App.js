@@ -16,7 +16,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         { cookieToken && <Route path="/dashboard" element={ <Dashboard/> } />}
-        { cookieToken && <Route path="/onboarding" element={ <Onboarding/> } />}
+        <Route path="/onboarding" element={ <Onboarding/> } />
         { cookieToken && <Route path="/resetpassword" element={ <Resetpassword/> } />}
       </Routes>
     </BrowserRouter>

@@ -1,5 +1,6 @@
 import Nav from "../components/nav";
-import { useState } from "react";
+import { passionsList } from "../utils/passionslist";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
@@ -19,13 +20,44 @@ const Onboarding = () => {
 		gender_interest: 'woman',
 		url: '',
 		about: '',
+		passions: [],
 		matches: []
 	})
 
 	let navigate = useNavigate();
 
+	const [checked, setChecked] = useState([]);
+
+	const handleCheckbox = (e) => {
+		// console.log(e.target.value);
+		let updatedList = [...checked];
+		if (e.target.checked) {
+			updatedList = [...checked, e.target.value];
+		}
+		else {
+			// console.log('Unchecked box');
+			updatedList.splice(checked.indexOf(e.target.value), 1);
+		}
+		setChecked(updatedList);
+		setFormData((prevState) => ({
+			// get the previous value(initial value)
+			...prevState,
+			// search for the name and change the value matching the name
+			passions : updatedList
+		}))
+	}
+
+	// console.log(checked);
+
+	const checkedPassions = checked.length
+	? checked.reduce((total, item) => {
+		return total + ", " + item;
+	})
+	: "";
+
 	const handleChange = (e) => {
 		const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+		// const value = e.target.value;
 		const name = e.target.name;
 
 		// set value of the form each time form 'changes'
@@ -36,6 +68,8 @@ const Onboarding = () => {
 			[name] : value
 		}))
 	}
+
+	console.log(formData);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -50,10 +84,6 @@ const Onboarding = () => {
 			console.log(err);
 		}
 	}
-
-	// if (props.match.path === "/confirm/:confirmCode") {
-	// 	activeUser(props.match.params.confirmCode);
-	// }
 
 	return (
 		<>
@@ -204,14 +234,36 @@ const Onboarding = () => {
 					</section>
 
 					<section>
-						<label htmlFor="url">Profile Photo</label>
-						<input
-							id="url"
-							type="url"
-							name="url"
-							required={true}
-							onChange={handleChange}
+						<label htmlFor="passions">My Passions</label>
+						<input readOnly
+							type="text"
+							placeholder="Sport, Art..."
+							value={ checkedPassions }
 						/>
+						<div className="mul-input-container">
+						{ passionsList.map((item, index) => {
+							return (
+								<>
+									<input key={ index }
+										id={ item }
+										type="checkbox"
+										name="passions"
+										value={ item }
+										onChange={ handleCheckbox }
+									/>
+									<label htmlFor={ item }>{ item }</label>
+								</>
+							)
+						})}
+						</div>
+						<label htmlFor="url">Profile Photo</label>
+							<input
+								id="url"
+								type="url"
+								name="url"
+								required={true}
+								onChange={handleChange}
+							/>
 						<div className="photo-container">
 							{ formData.url && <img src={ formData.url } alt="profile photo preview"/> }
 						</div>
