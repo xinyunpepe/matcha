@@ -9,7 +9,9 @@ const {
 	getUser,
 	resetPassword,
 	verifyPassword,
-	updatePassword }
+	updatePassword,
+	getGenderdUsers,
+	addMatch }
 	= require('../controllers/auth.controller');
 
 router.post('/signup', signup);
@@ -20,5 +22,7 @@ router.get('/resetpassword/:passwordCode', verifyPassword);
 router.put('/updatepassword', updatePassword);
 router.put('/user', updateUser);
 router.get('/user', getUser);
+router.get('/gendered-users', getGenderdUsers);
+router.put('/addmatch', addMatch);
 
 module.exports = router;

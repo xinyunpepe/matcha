@@ -171,6 +171,14 @@ exports.updateUser = (req, res) => {
 				return res.status(404).json({ message: "User Not found." });
 			}
 
+			var today = new Date();
+			var age = today.getFullYear() - formData.birth_year;
+			var m = today.getMonth() - formData.birth_month;
+			if (m < 0 || (m === 0 && today.getDate() < formData.birth_day)) {
+				age--;
+			}
+
+			users.age = age;
 			users.first_name = formData.first_name;
 			users.last_name = formData.last_name;
 			users.birth_day = formData.birth_day;
@@ -181,6 +189,7 @@ exports.updateUser = (req, res) => {
 			users.gender_interest = formData.gender_interest;
 			users.url = formData.url;
 			users.about = formData.about;
+			users.passions = formData.passions;
 			users.matches = formData.matches;
 
 			users.save((err) => {
@@ -204,6 +213,41 @@ exports.getUser = (req, res) => {
 			if (!users) {
 				return res.status(404).json({ message: "User not found" });
 			}
+			res.send(users);
+		})
+		.catch((err) => {
+			console.log("error", err);
+		});
+}
+
+exports.getGenderdUsers = (req, res) => {
+	userModel.find({ gender_identity: { $eq : req.query.gender } })
+		.then((users) => {
+			if (!users) {
+				return res.status(404).json({ message: "User not found" });
+			}
+			res.send(users);
+		})
+		.catch((err) => {
+			console.log("error", err);
+		});
+}
+
+exports.addMatch = (req, res) => {
+	userModel.findOne({ user_id: req.body.userId })
+		.then((users) => {
+			if (!users) {
+				return res.status(404).json({ message: "User Not found." });
+			}
+			users.matches.push(req.body.matchedUserId);
+			users.save((err) => {
+				if (err) {
+					console.log("Error in updating account");
+					res.status(500).json({ message: err });
+					return;
+				}
+				console.log('User is updated successfully');
+			});
 			res.send(users);
 		})
 		.catch((err) => {

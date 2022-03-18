@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema({
 		unique: true,
 		required: true
 	},
+	age: Number,
 	first_name: String,
 	last_name: String,
 	birth_day: Number,
@@ -38,10 +39,13 @@ const userSchema = new mongoose.Schema({
 	gender_interest: String,
 	url: String,
 	about: String,
+	passions: {
+		type: Array,
+		default: []
+	},
 	matches: {
-		type: [{
-			user_id: { type: String }
-		}]
+		type: Array,
+		default: []
 	}
 });
 
