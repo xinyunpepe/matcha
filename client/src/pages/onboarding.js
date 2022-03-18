@@ -47,8 +47,6 @@ const Onboarding = () => {
 		}))
 	}
 
-	// console.log(checked);
-
 	const checkedPassions = checked.length
 	? checked.reduce((total, item) => {
 		return total + ", " + item;
@@ -229,8 +227,9 @@ const Onboarding = () => {
 						{ passionsList.map((item, index) => {
 							return (
 								<>
-									<input key={ index }
-										id={ item }
+									<input
+										key={ index }
+										// id={ item }
 										type="checkbox"
 										name="passions"
 										value={ item }

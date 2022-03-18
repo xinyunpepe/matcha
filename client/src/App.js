@@ -14,10 +14,10 @@ const App = () => {
     // set up the path of pages
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        { cookieToken && <Route path="/dashboard" element={ <Dashboard/> } />}
+        <Route path="/" element={ <Home/> } />
+        <Route path="/dashboard" element={ <Dashboard/> } />
         <Route path="/onboarding" element={ <Onboarding/> } />
-        { cookieToken && <Route path="/resetpassword" element={ <Resetpassword/> } />}
+        <Route path="/resetpassword" element={ <Resetpassword/> } />
       </Routes>
     </BrowserRouter>
   );

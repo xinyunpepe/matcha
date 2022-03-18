@@ -288,7 +288,7 @@ nav .logo-container .text-logo-green {
 }
 
 /* --- Chat container --- */
-.chat-container {
+.left-container {
 	background-color: white;
 	box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
 	rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
@@ -297,38 +297,54 @@ nav .logo-container .text-logo-green {
 	z-index: 1;
 }
 
-.chat-container .chat-header {
+.left-container .chat-header {
 	background: linear-gradient(268deg, rgb(116, 161, 46), rgb(140, 173, 88));
-	height: 100px;
+	height: 80px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
 
-.chat-container .option {
+.left-container .option {
 	border: none;
 	background-color: white;
 	border-bottom: solid 4px rgb(116, 161, 46);
 	font-size: 20px;
-	margin: 2px;
+	/* margin: 2px; */
+	margin-left: 20px;
 	padding: 10px;
 }
 
-.chat-container .option:disabled {
+.left-container .option:disabled {
 	border-bottom: solid 4px rgb(187, 187, 187);
 }
 
-.chat-container .profile,
-.chat-container .log-out-icon {
+.left-container .profile {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	color: white;
+}
+
+.left-container .profile h2 {
+	font-style: normal;
+	font-weight: 300;
+}
+
+.left-container .log-out-icon {
 	display: flex;
 	align-items: center;
 	padding: 20px;
 	color: white;
 }
 
+.left-container .log-out-icon:hover {
+	cursor: pointer;
+}
+
 .img-container {
-	height: 30px;
-	width: 20px;
+	height: 40px;
+	width: 40px;
 	border-radius: 15px;
 	overflow: hidden;
 	margin: 10px;
@@ -336,6 +352,10 @@ nav .logo-container .text-logo-green {
 
 .img-container img {
 	width: 100%;
+}
+
+.img-container img:hover {
+	cursor: pointer;
 }
 
 /* --- Chat display --- */
@@ -351,3 +371,131 @@ nav .logo-container .text-logo-green {
 	display: flex;
 	flex-direction: column;
 }
+
+/* --- Setting header --- */
+.setting-header {
+	background: linear-gradient(268deg, rgb(116, 161, 46), rgb(140, 173, 88));
+	height: 80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.setting-header .go-back-icon {
+	position: absolute;
+	left: 20px;
+	color: white;
+}
+
+.setting-header .go-back-icon:hover {
+	cursor: pointer;
+}
+
+.setting-header .profile-setting {
+	position: relative;
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	color: white;
+}
+
+.setting-header .profile-setting h2 {
+	font-style: normal;
+	font-weight: 300;
+}
+
+/* --- Setting container --- */
+.setting-container {
+	border-top: solid 1px rgb(213, 213, 213);
+}
+
+.setting-container form {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.setting-container form section {
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+	width: 90%;
+	text-align: start;
+}
+
+.setting-container form input {
+	padding: 10px 20px;
+	margin: 5px 0;
+	font-size: 15px;
+	border: solid 2px rgb(219, 219, 219);
+	border-radius: 10px;
+}
+
+
+.setting-container form input[type=range] {
+	box-sizing: border-box;
+	appearance: none;
+	width: 100%;
+	margin: 0;
+	padding: 0 2px;
+	/* Add some L/R padding to ensure box shadow of handle is shown */
+	overflow: hidden;
+	border: 0;
+	border-radius: 1px;
+	outline: none;
+	background: linear-gradient(grey, grey) no-repeat center;
+	/* Use a linear gradient to generate only the 2px height background */
+	background-size: 100% 2px;
+	pointer-events: none;
+}
+
+.setting-container form input[type=range]:active,
+.setting-container form input[type=range]:focus {
+	outline: none;
+}
+
+.setting-container form input[type=range]::-webkit-slider-thumb {
+	height: 28px;
+	width: 28px;
+	border-radius: 28px;
+	background-color: #fff;
+	position: relative;
+	margin: 5px 0;
+	/* Add some margin to ensure box shadow is shown */
+	cursor: pointer;
+	appearance: none;
+	pointer-events: all;
+	box-shadow: 0 1px 4px 0.5px rgba(0, 0, 0, 0.25)
+}
+
+.setting-container form input[type=range]::before {
+	content: ' ';
+	display: block;
+	position: absolute;
+	top: 13px;
+	left: 100%;
+	width: 2000px;
+	height: 2px;
+}
+
+.multi-range {
+	position: relative;
+	height: 50px;
+}
+
+.multi-range input[type=range] {
+	position: absolute;
+}
+
+.multi-range input[type=range]:nth-child(1)::-webkit-slider-thumb::before {
+	background-color: red;
+}
+
+.multi-range input[type=range]:nth-child(2) {
+	background: none;
+}
+
+.multi-range input[type=range]:nth-child(2)::-webkit-slider-thumb::before {
+	background-color: grey;
+}
+

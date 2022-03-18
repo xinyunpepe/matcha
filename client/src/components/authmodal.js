@@ -105,7 +105,7 @@ const AuthModal = ({ setShowModal, isSignup }) => {
 
 	return (
 		<>
-			{!resetPassword &&
+			{ !resetPassword &&
 			<div className="auth-modal">
 				<div className="close-icon" onClick={ handleClick }>⨂</div>
 				<h2>{ isSignup ? 'CREATE ACCOUNT' : 'LOG IN' }</h2>
