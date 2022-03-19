@@ -1,8 +1,31 @@
+import React from 'react';
 import { useCookies } from 'react-cookie';
-import { Slider } from 'material-ui-slider';
+import { useState } from 'react';
+import { Slider } from '@mui/material';
 
 const Settings = ({ user }) => {
 	const [cookies, setCookie, removeCookie] = useCookies(['user']);
+	const [distance, setDistance] = useState(10);
+	const [age, setAge] = useState([18, 99]);
+
+	const handleChangeDistance = (e, value) => {
+		// const value = e.target.value;
+		setDistance(value);
+	}
+
+	const minAgeGap = 1;
+
+	const handleChangeAge = (e, newValue, activeThumb) => {
+		if (!Array.isArray(newValue)) {
+		  return;
+		}
+		if (activeThumb === 0) {
+			setAge([Math.min(newValue[0], age[1] - minAgeGap), age[1]]);
+		}
+		else {
+			setAge([age[0], Math.max(newValue[1], age[0] + minAgeGap)]);
+		}
+	}
 
 	return (
 		<>
@@ -14,41 +37,28 @@ const Settings = ({ user }) => {
 						<input
 						/>
 
-						<label htmlFor="distance">Maximum Distance</label>
+						<div className="setting-label">
+							<label htmlFor="distance">Maximum Distance</label>
+							{ distance } km
+						</div>
 
-						<input
-							id="distance"
-							type="range"
-							name="distance"
-							min="1"
-							max="50"
+						<Slider
+							value={ distance }
+							onChange={ handleChangeDistance }
+							valueLabelDisplay="auto"
+							color="#74A12E"
 						/>
 
-						<label htmlFor='age-range'>Age Range</label>
+						<div className="setting-label">
+							<label htmlFor='age-range'>Age Range</label>
+							{ age[0] } - { age[1] }
+						</div>
+
 						<Slider
-							name="age_rage"
-							defaultValue={[18, 99]}
-							range
+							value={ age }
+							onChange={ handleChangeAge }
 							valueLabelDisplay="auto"
 						/>
-
-
-						<div className="multi-range">
-							{/* <input
-								id="lower"
-								type="range"
-								name="age_range"
-								min="18"
-								max="100"
-							/>
-							<input
-								id="higher"
-								type="range"
-								name="age_range"
-								min="18"
-								max="100"
-							/> */}
-						</div>
 
 						<p>NOTIFICATIONS</p>
 						<label htmlFor="email-notif">Email</label>
