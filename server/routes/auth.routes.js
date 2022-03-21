@@ -11,7 +11,8 @@ const {
 	verifyPassword,
 	updatePassword,
 	getGenderdUsers,
-	addMatch }
+	addMatch,
+	updateSettings }
 	= require('../controllers/auth.controller');
 
 router.post('/signup', signup);
@@ -24,5 +25,6 @@ router.put('/user', updateUser);
 router.get('/user', getUser);
 router.get('/gendered-users', getGenderdUsers);
 router.put('/addmatch', addMatch);
+router.put('/settings', updateSettings);
 
 module.exports = router;

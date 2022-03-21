@@ -1,3 +1,4 @@
+import React from 'react';
 import Nav from "../components/nav";
 import { passionsList } from "../utils/passionslist";
 import { useEffect, useState } from "react";
@@ -24,9 +25,9 @@ const Onboarding = () => {
 		matches: []
 	})
 
-	let navigate = useNavigate();
-
 	const [checked, setChecked] = useState([]);
+
+	let navigate = useNavigate();
 
 	const handleCheckbox = (e) => {
 		// console.log(e.target.value);

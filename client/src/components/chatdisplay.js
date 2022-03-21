@@ -1,3 +1,4 @@
+import React from 'react';
 import Chat from "./chat";
 import ChatInput from "./chatinput";
 

@@ -254,3 +254,31 @@ exports.addMatch = (req, res) => {
 			console.log("error", err);
 		});
 }
+
+exports.updateSettings = (req, res) => {
+	const formData = req.body.formData;
+
+	userModel.findOne({ user_id: formData.user_id })
+		.then((users) => {
+			if (!users) {
+				return res.status(404).json({ message: "User Not found." });
+			}
+
+			users.location = formData.location;
+			users.distance = formData.distance;
+			users.age_range = formData.age_range;
+
+			users.save((err) => {
+				if (err) {
+					console.log("Error in updating settings");
+					res.status(500).json({ message: err });
+					return;
+				}
+				console.log('Settings are updated successfully');
+			});
+			res.send(users);
+		})
+		.catch((err) => {
+			console.log("error", err);
+		});
+}

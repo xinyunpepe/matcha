@@ -1,9 +1,9 @@
+import React from 'react';
 import { useState } from 'react';
 import validator from 'validator';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import signUp from '../services/authservice';
 
 const AuthModal = ({ setShowModal, isSignup }) => {
 	// init the form to null
@@ -117,7 +117,12 @@ const AuthModal = ({ setShowModal, isSignup }) => {
 						id="username"
 						name="username"
 						placeholder="username"
-						required={ true }
+						rules={[
+							{
+								required: true,
+								message: "USERNAME!"
+							}
+						]}
 						onChange={(e) => setUsername(e.target.value)}
 					/> }
 					<input

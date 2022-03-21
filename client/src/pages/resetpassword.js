@@ -1,3 +1,4 @@
+import React from 'react';
 import Nav from "../components/nav";
 import { useState } from 'react';
 import { useCookies } from 'react-cookie';

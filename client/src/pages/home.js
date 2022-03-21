@@ -1,3 +1,4 @@
+import React from 'react';
 import Nav from '../components/nav';
 import AuthModal from '../components/authmodal';
 import { useState } from 'react';
@@ -36,7 +37,7 @@ const Home = () => {
 				showModal={ showModal }
 				setIsSignup={ setIsSignup }
 			/>
-			
+
 			<div className="home">
 				<h1 className='primary-title'>Swipe Right</h1>
 				<button className="primary-button" onClick={ handleClick }>

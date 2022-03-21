@@ -39,6 +39,15 @@ const userSchema = new mongoose.Schema({
 	gender_interest: String,
 	url: String,
 	about: String,
+	location: {
+		type: Array,
+		default: []
+	},
+	distance: Number,
+	age_range: {
+		type: Array,
+		default: []
+	},
 	passions: {
 		type: Array,
 		default: []

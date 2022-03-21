@@ -1,3 +1,4 @@
+import React from 'react';
 import Home from './pages/home';
 import Dashboard from './pages/dashboard';
 import Onboarding from './pages/onboarding';
@@ -15,9 +16,9 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={ <Home/> } />
-        <Route path="/dashboard" element={ <Dashboard/> } />
-        <Route path="/onboarding" element={ <Onboarding/> } />
-        <Route path="/resetpassword" element={ <Resetpassword/> } />
+        { cookieToken && <Route path="/dashboard" element={ <Dashboard/> } /> }
+        { cookieToken && <Route path="/onboarding" element={ <Onboarding/> } /> }
+        { cookieToken && <Route path="/resetpassword" element={ <Resetpassword/> } /> }
       </Routes>
     </BrowserRouter>
   );

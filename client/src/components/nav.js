@@ -1,3 +1,4 @@
+import React from 'react';
 const Nav = ({ minimal, setShowModal, showModal, setIsSignup}) => {
 
 	const handleClick = () => {
