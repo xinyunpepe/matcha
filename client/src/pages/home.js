@@ -2,6 +2,7 @@ import React from 'react';
 import Nav from '../components/nav';
 import AuthModal from '../components/authmodal';
 import { useState } from 'react';
+import { useCookies } from 'react-cookie';
 
 const Home = () => {
 	// useState usage => const [state, setState] = useState(initialState);
@@ -9,21 +10,26 @@ const Home = () => {
 
 	// init showModal to false
 	const [showModal, setShowModal] = useState(false);
-
 	// init isSignup to true
 	const [isSignup, setIsSignup] = useState(true);
+	const [cookies, setCookie, removeCookie] = useCookies(['user']);
 
 	// determine login or not
-	const authToken = false;
+	const authToken = cookies.CookieToken;
 
 	// button handler
 	const handleClick = () => {
-		console.log('clicked');
-
+		if (authToken) {
+			removeCookie('UserId', cookies.UserId);
+			removeCookie('CookieToken', cookies.CookieToken);
+			console.log("User is logged out successfully");
+			window.location.reload();
+			return
+		}
 		// once button clicked, the modal shows up
 		setShowModal(true);
-
 		setIsSignup(true);
+
 	}
 
 	return (
@@ -32,7 +38,9 @@ const Home = () => {
 
 			{/* minimal determines which logo to use
 			authToken determines if login button shows*/}
-			<Nav minimal={ false }
+			<Nav
+				authToken={ authToken }
+				minimal={ false }
 				setShowModal={ setShowModal }
 				showModal={ showModal }
 				setIsSignup={ setIsSignup }

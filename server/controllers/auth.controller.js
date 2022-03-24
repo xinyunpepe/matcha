@@ -1,5 +1,6 @@
 const userModel = require('../models/user.model');
 const resetPasswordModel = require('../models/resetpassword.model');
+const messageModel = require('../models/message.model');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
@@ -121,7 +122,6 @@ exports.resetPassword = (req, res) => {
 		});
 }
 
-
 exports.verifyPassword = (req, res) => {
 	resetPasswordModel.findOne({ token: req.params.passwordCode })
 		.then((resetPasswords) => {
@@ -178,7 +178,7 @@ exports.updateUser = (req, res) => {
 				age--;
 			}
 
-			users.age = age;
+			users.age = age.parseInt();
 			users.first_name = formData.first_name;
 			users.last_name = formData.last_name;
 			users.birth_day = formData.birth_day;
@@ -220,12 +220,28 @@ exports.getUser = (req, res) => {
 		});
 }
 
-exports.getGenderdUsers = (req, res) => {
-	userModel.find({ gender_identity: { $eq : req.query.gender } })
+exports.getFilteredUsers = (req, res) => {
+	const maxDistanceInMeters = req.query.distance * 1000;
+
+	userModel.find({
+			gender_identity: { $eq : req.query.gender },
+			// geographical_area: { $eq : req.query.area },
+			age: { $gte: req.query.age_from, $lte: req.query.age_to},
+			location: {
+				$near: {
+					$geometry: {
+						type: "Point",
+						coordinates: [req.query.lng, req.query.lat],
+					},
+					$maxDistance: maxDistanceInMeters,
+				},
+			},
+		})
 		.then((users) => {
 			if (!users) {
 				return res.status(404).json({ message: "User not found" });
 			}
+			// console.log(users);
 			res.send(users);
 		})
 		.catch((err) => {
@@ -264,7 +280,8 @@ exports.updateSettings = (req, res) => {
 				return res.status(404).json({ message: "User Not found." });
 			}
 
-			users.location = formData.location;
+			users.location = {'type': 'Point', 'coordinates': formData.location};
+			users.geographical_area = formData.geographical_area;
 			users.distance = formData.distance;
 			users.age_range = formData.age_range;
 
@@ -281,4 +298,57 @@ exports.updateSettings = (req, res) => {
 		.catch((err) => {
 			console.log("error", err);
 		});
+}
+
+// WHY ASYNC IS NECCESERY???
+exports.getMatchedUsers = async (req, res) => {
+	// console.log(JSON.parse(req.query.userIds));
+
+	const foundUsers = await userModel.aggregate([
+		{
+			'$match': {
+				'user_id': {
+					'$in': JSON.parse(req.query.userIds)
+				}
+			}
+		}
+	]);
+	// console.log(foundUsers);
+	res.send(foundUsers);
+}
+
+exports.getMessages = (req, res) => {
+	messageModel.find({
+			from_userId: req.query.userId,
+			to_userId: req.query.matchedUserId
+		})
+		.then((messages) => {
+			if (!messages) {
+				return res.status(404).json({ message: "Message not found" });
+			}
+			// console.log(users);
+			res.send(messages);
+		})
+		.catch((err) => {
+			console.log("error", err);
+		});
+}
+
+exports.addMessage = (req, res) => {
+	const message = req.body.message;
+
+	const data = new messageModel({
+		timestamp: message.timestamp,
+		from_userId: message.from_userId,
+		to_userId: message.to_userId,
+		message: message.message
+	});
+	
+	data.save((err) => {
+		if (err) {
+			res.status(500).json({ message: err });
+			return;
+		}
+	});
+	res.send(data);
 }

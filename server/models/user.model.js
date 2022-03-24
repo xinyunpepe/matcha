@@ -40,9 +40,15 @@ const userSchema = new mongoose.Schema({
 	url: String,
 	about: String,
 	location: {
-		type: Array,
-		default: []
+		type: {
+			type: String,
+			default: 'Point',
+		},
+		coordinates: {
+			type: [Number]
+		},
 	},
+	geographical_area: String,
 	distance: Number,
 	age_range: {
 		type: Array,
@@ -59,5 +65,7 @@ const userSchema = new mongoose.Schema({
 });
 
 const userModel = mongoose.model('users', userSchema);
+
+userSchema.index({ location : "2dsphere" });
 
 module.exports = userModel;

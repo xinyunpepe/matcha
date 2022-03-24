@@ -10,10 +10,13 @@ const {
 	resetPassword,
 	verifyPassword,
 	updatePassword,
-	getGenderdUsers,
+	getFilteredUsers,
 	addMatch,
-	updateSettings }
-	= require('../controllers/auth.controller');
+	updateSettings,
+	getMatchedUsers,
+	getMessages,
+	addMessage
+} = require('../controllers/auth.controller');
 
 router.post('/signup', signup);
 router.get('/confirm/:confirmCode', activeUser);
@@ -23,8 +26,11 @@ router.get('/resetpassword/:passwordCode', verifyPassword);
 router.put('/updatepassword', updatePassword);
 router.put('/user', updateUser);
 router.get('/user', getUser);
-router.get('/gendered-users', getGenderdUsers);
+router.get('/filtered-users', getFilteredUsers);
 router.put('/addmatch', addMatch);
 router.put('/settings', updateSettings);
+router.get('/matched-users', getMatchedUsers);
+router.get('/messages', getMessages);
+router.post('/message', addMessage);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 import React from 'react';
 import Nav from "../components/nav";
 import { passionsList } from "../utils/passionslist";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
@@ -225,12 +225,11 @@ const Onboarding = () => {
 							value={ checkedPassions }
 						/>
 						<div className="mul-input-container">
-						{ passionsList.map((item, index) => {
+						{ passionsList?.map((item, index) => {
 							return (
 								<>
 									<input
 										key={ index }
-										// id={ item }
 										type="checkbox"
 										name="passions"
 										value={ item }

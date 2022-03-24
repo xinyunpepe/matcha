@@ -261,30 +261,68 @@ nav .logo-container .text-logo-green {
 }
 
 .dashboard .card-container {
-	width: 400px;
-	height: 650px;
+	width: 350px;
+	height: 600px;
 }
 
 .card {
 	background-color: #fff;
-	width: 400px;
-	height: 650px;
+	width: 350px;
+	height: 550px;
 	border-radius: 30px;
 	background-size: cover;
 	background-position: center;
 }
 
-.card h3 {
+.card h1 {
 	position: absolute;
-	bottom: 0;
+	bottom: 210px;
 	margin: 10px;
 	color: #fff;
 }
 
-.dashboard .swipe-info {
+.card table {
 	position: absolute;
-	bottom: 0;
-	padding: 10px;
+	text-align: left;
+	bottom: 90px;
+	color: #fff
+}
+
+.card table td {
+	display: inline-block;
+	padding: 5px 10px;
+	margin: 5px;
+	border-radius: 15px;
+	background-color: rgb(71, 71, 71, 0.75);
+	color: #fff;
+	justify-content: left;
+}
+
+.card .primary-button {
+	margin-top: 580px;
+}
+
+.swipe-buttons {
+	bottom: 10px;
+}
+
+.swipe-buttons button {
+	height: 60px;
+	width: 60px;
+	border-radius: 30px;
+	border: none;
+	margin: 10px 20px;
+	background-color: white;
+	box-shadow: 0px 10px 53px 0px rgba(0, 0, 0, 0.3)
+}
+
+.swipe-buttons button:hover {
+	cursor: pointer;
+}
+
+.swipe-buttons img {
+	height: 25px;
+	width: 25px;
 }
 
 /* --- Chat container --- */
@@ -359,7 +397,8 @@ nav .logo-container .text-logo-green {
 }
 
 /* --- Chat display --- */
-.chat-display {
+.chat-display,
+.matches-display {
 	padding: 20px;
 	height: 60vh;
 	overflow-y: auto;
@@ -419,6 +458,10 @@ nav .logo-container .text-logo-green {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+}
+
+.setting-container .setting-label p:hover {
+	cursor: pointer;
 }
 
 .setting-container form section {

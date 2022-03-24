@@ -1,12 +1,9 @@
-import React from 'react';
-const Nav = ({ minimal, setShowModal, showModal, setIsSignup}) => {
+const Nav = ({ authToken, minimal, setShowModal, showModal, setIsSignup}) => {
 
 	const handleClick = () => {
 		setShowModal(true);
 		setIsSignup(false);
 	}
-
-	const authToken = false;
 
 	return (
 		<nav>

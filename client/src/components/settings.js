@@ -4,17 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import { Slider } from '@mui/material';
 import axios from 'axios';
 
-const Settings = () => {
+const Settings = ({ user }) => {
 	const [cookies, setCookie, removeCookie] = useCookies(['user']);
 	const [latitude, setLatitude] = useState(null);
 	const [longitude, setLongitute] = useState(null);
-	const [address, setAddress] = useState(null);
-	const [showLocation, setShowLocation] = useState(false);
-	const [distance, setDistance] = useState(10);
-	const [age, setAge] = useState([0, 99]);
+	const [address, setAddress] = useState(user.geographical_area);
+	// const [showLocation, setShowLocation] = useState(false);
+	const [distance, setDistance] = useState(user.distance);
+	const [age, setAge] = useState([user.age_range[0], user.age_range[1]]);
 	const [formData, setFormData] = useState({
 		user_id: cookies.UserId,
 		location: [],
+		geographical_area: '',
 		distance: '',
 		age_range: []
 	});
@@ -23,7 +24,7 @@ const Settings = () => {
 		if (!('geolocation' in navigator)) {
 			console.log("Geolocation not supported");
 		}
-		navigator.geolocation.watchPosition((location) => {
+		navigator.geolocation.getCurrentPosition((location) => {
 			setLatitude(location.coords.latitude);
 			setLongitute(location.coords.longitude);
 		})
@@ -32,21 +33,21 @@ const Settings = () => {
 	const getLocation = () => {
 		axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=pk.eyJ1IjoieGlueXVucGVwZSIsImEiOiJjbDEwaWJhNGQwMDlpM2RvZjdvbHE5aGFnIn0.YOm_nqLR1p7yeHtxRu22EA`)
 			.then(({data}) => {
-				setAddress(data.features[1].place_name)
+				setAddress(data.features[1].place_name);
+
+				const locationData = [longitude, latitude];
+
+				setFormData((prevState) => ({
+					...prevState,
+					location : locationData,
+					geographical_area : data.features[1].place_name
+				}))
 			})
 			.catch(err => {
 				console.log(err)
 			})
-		setShowLocation(true);
-
-		const locationData = [latitude, longitude];
-		setFormData((prevState) => ({
-			...prevState,
-			location : locationData
-		}))
+		// setShowLocation(true);
 	}
-
-	// console.log(address);
 
 	const handleChangeDistance = (e, value) => {
 		// const value = e.target.value;
@@ -111,7 +112,8 @@ const Settings = () => {
 						<div className="setting-label">
 							<label htmlFor="location">Location</label>
 							{/* { latitude }, { longitude } */}
-							<p onClick = { getLocation }>{ showLocation ? address : 'Choose Location' }</p>
+							{/* <p onClick={ getLocation }>{ address ? address : 'Choose Location' }</p> */}
+							<p onClick={ getLocation }>{ address } ▿</p>
 						</div>
 
 						<div className="setting-label">

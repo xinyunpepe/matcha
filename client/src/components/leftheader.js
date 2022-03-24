@@ -1,4 +1,3 @@
-import React from 'react';
 import { useCookies } from 'react-cookie';
 
 const LeftHeader = ({ user, isSettings, setIsSettings }) => {
@@ -39,7 +38,7 @@ const LeftHeader = ({ user, isSettings, setIsSettings }) => {
 			}
 			{ isSettings &&
 				<div className="setting-header">
-					<p className="go-back-icon" onClick={ handleSettings }>⇐</p>
+					<p className="go-back-icon" onClick={ handleSettings }>⇦</p>
 					<div className="profile-setting">
 						<div className="img-container">
 							<img
