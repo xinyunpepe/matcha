@@ -15,7 +15,8 @@ const {
 	updateSettings,
 	getMatchedUsers,
 	getMessages,
-	addMessage
+	addMessage,
+	updateMoreUrls
 } = require('../controllers/auth.controller');
 
 router.post('/signup', signup);
@@ -32,5 +33,6 @@ router.put('/settings', updateSettings);
 router.get('/matched-users', getMatchedUsers);
 router.get('/messages', getMessages);
 router.post('/message', addMessage);
+router.put('/more-url', updateMoreUrls);
 
 module.exports = router;

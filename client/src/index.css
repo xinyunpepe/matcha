@@ -261,17 +261,19 @@ nav .logo-container .text-logo-green {
 }
 
 .dashboard .card-container {
-	width: 350px;
+	width: 400px;
 	height: 600px;
 }
 
 .card {
+	/* position: relative; */
 	background-color: #fff;
-	width: 350px;
-	height: 550px;
+	width: 400px;
+	height: 600px;
 	border-radius: 30px;
 	background-size: cover;
 	background-position: center;
+	box-shadow: 0px 10px 30px 0px rgba(0,0,0,0.2);
 }
 
 .card h1 {
@@ -298,10 +300,6 @@ nav .logo-container .text-logo-green {
 	justify-content: left;
 }
 
-.card .primary-button {
-	margin-top: 580px;
-}
-
 .swipe-buttons {
 	bottom: 10px;
 }
@@ -313,7 +311,7 @@ nav .logo-container .text-logo-green {
 	border: none;
 	margin: 10px 20px;
 	background-color: white;
-	box-shadow: 0px 10px 53px 0px rgba(0, 0, 0, 0.3)
+	box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.3)
 }
 
 .swipe-buttons button:hover {
@@ -323,6 +321,29 @@ nav .logo-container .text-logo-green {
 .swipe-buttons img {
 	height: 25px;
 	width: 25px;
+}
+
+/* --- Edit info --- */
+.card .img-button {
+	position: absolute;
+	left: 59%;
+	bottom: 100px;
+	display: inline-flex;
+	flex-direction: column;
+	margin: 10px;
+}
+
+.card .img-button .primary-button {
+	margin: 5px;
+}
+
+.card img {
+	width: 120px;
+	height: 180px;
+	border-radius: 15px;
+	object-fit: cover;
+	cursor: pointer;
+	margin: 20px 5px;
 }
 
 /* --- Chat container --- */

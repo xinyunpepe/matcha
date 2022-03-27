@@ -1,17 +1,21 @@
 import React from 'react';
 import TinderCard from "react-tinder-card";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useCookies } from 'react-cookie';
-import LeftContainer from "../components/leftcontainer"
-import axios from "axios";
-import green_heart from "../images/green-heart1.svg";
-import pink_cancel from "../images/pink-cancel.svg"
+import { useNavigate } from 'react-router-dom';
+import LeftContainer from '../components/leftcontainer'
+import axios from 'axios';
+import green_heart from '../images/green-heart1.svg';
+import pink_cancel from '../images/pink-cancel.svg';
 
 const Dashboard = () => {
 	const [user, setUser] = useState(null);
 	const [filteredUsers, setFilteredUsers] = useState(null);
 	const [isSettings, setIsSettings] = useState(false);
 	const [unlikedUser, setUnlikedUser] = useState([]);
+	const [editInfo, setEditInfo] = useState(false);
+	const [image, setImage] = useState([]);
+	const fileInputRef = useRef(null);
 	const [cookies, setCookie, removeCookie] = useCookies(['user']);
 
 	const userId = cookies.UserId;
@@ -82,9 +86,56 @@ const Dashboard = () => {
 			setUnlikedUser(unlikedUserList);
 		}
 	}
-	
+
 	const outOfFrame = (name) => {
 		console.log(name + ' left the screen!');
+	}
+
+	const handleClick = (e) => {
+		e.preventDefault();
+		fileInputRef.current.click();
+	}
+
+	const handleImg = (img) => {
+		let updatedImgList = [...image];
+		updatedImgList.splice(image.indexOf(img), 1);
+		setImage(updatedImgList);
+	}
+
+	// console.log(image);
+
+	const handleAddMedia = (e) => {
+		// console.log(e.target.files[])
+
+		if (e.target.files) {
+			const filesArray = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
+			// console.log("filesArray: ", filesArray);
+
+			setImage((prevImages) => prevImages.concat(filesArray));
+			Array.from(e.target.files).map(
+				(file) => URL.revokeObjectURL(file) // avoid memory leak
+			);
+		}
+
+		if (image.length > 3) {
+			image.length = 3;
+		}
+	};
+
+	let navigate = useNavigate();
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			const response = await axios.put('http://localhost:8000/more-url', { userId, image });
+			const success = response.status === 200;
+			if (success) {
+				navigate('/dashboard');
+			}
+		}
+		catch (err) {
+			console.log(err);
+		}
 	}
 
 	// map matched users ids
@@ -133,22 +184,53 @@ const Dashboard = () => {
 											</button>
 										</div>
 									</TinderCard>
-
 								)}
 							</div>
 						</div>
 					}
-					{ isSettings &&
+
+					{/* Edit info start page */}
+					{ isSettings && !editInfo &&
 						<div className="swipe-container">
 							<div className="card-container">
-								<div className='swipe'>
-									<div style={{ backgroundImage: 'url(' + user.url + ')' }} className='card'>
-										<h1>{ user.first_name } { user.age }</h1>
-										<button className="primary-button">Edit Info</button>
+								<div style={{ backgroundImage: 'url(' + user.url + ')' }} className='card'>
+									<h1>{ user.first_name } { user.age }</h1>
+									<div className='img-button'>
+										<button onClick={() => setEditInfo(true)} className="primary-button">Edit Info</button>
 									</div>
 								</div>
 							</div>
 						</div>
+					}
+
+					{/* Edit info photos uploading page */}
+					{ isSettings && editInfo &&
+						<div className='swipe-container'>
+							<div className='card'>
+								<div className='preview-img'>
+									<img src={ user.url } alt={ "photo of " + user.first_name }/>
+									{ image.map((img) =>
+										<img
+											key={ img }
+											src={ img }
+											alt="previews"
+											onClick={ handleImg }
+										/>
+									)}
+								</div>
+								<input
+									ref={ fileInputRef }
+									type='file'
+									style={{ display: 'none' }}
+									accept='image/*'
+									onChange={ handleAddMedia }
+								/>
+								<div className='img-button'>
+									<button onClick={ handleClick } className='primary-button'>add media</button>
+									<button onClick={ handleSubmit } className="primary-button">Save</button>
+								</div>
+							</div>
+					 	</div>
 					}
 				</div>
 			}

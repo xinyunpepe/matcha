@@ -343,7 +343,7 @@ exports.addMessage = (req, res) => {
 		to_userId: message.to_userId,
 		message: message.message
 	});
-	
+
 	data.save((err) => {
 		if (err) {
 			res.status(500).json({ message: err });
@@ -351,4 +351,26 @@ exports.addMessage = (req, res) => {
 		}
 	});
 	res.send(data);
+}
+
+exports.updateMoreUrls = (req, res) => {
+	userModel.findOne({ user_id: req.body.userId })
+		.then((users) => {
+			if (!users) {
+				return res.status(404).json({ message: "User Not found." });
+			}
+			users.more_url = req.body.image;
+			users.save((err) => {
+				if (err) {
+					console.log("Error in updating more urls");
+					res.status(500).json({ message: err });
+					return;
+				}
+				console.log('More urls are updated successfully');
+			});
+			res.send(users);
+		})
+		.catch((err) => {
+			console.log("error", err);
+		});
 }

@@ -61,6 +61,10 @@ const userSchema = new mongoose.Schema({
 	matches: {
 		type: Array,
 		default: []
+	},
+	more_url: {
+		type: Array,
+		default: []
 	}
 });
 
