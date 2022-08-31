@@ -1,5 +1,4 @@
 # matcha
-Tinder clone
 TODO
   - Error messages upon login
   - Geography filter
