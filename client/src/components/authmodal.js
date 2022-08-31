@@ -51,11 +51,12 @@ const AuthModal = ({ setShowModal, isSignup }) => {
 					return ;
 				}
 				setError("Please check your email and active your account");
-				// post data to the backend
-				await axios.post('http://localhost:8000/signup', { username, email, password });
+				await axios.post('http://localhost:8000/signup', { username, email, password, confirmPassword });
 			}
 			else {
 				const response = await axios.post('http://localhost:8000/login', { email, password });
+
+				// TODO error messages
 				// if (response.status === 400) {
 				// 	setError("Invalid password");
 				// 	return ;
@@ -72,7 +73,7 @@ const AuthModal = ({ setShowModal, isSignup }) => {
 				// 	navigate('/dashboard');
 				// }
 				setCookie('UserId', response.data.userId);
-				setCookie('CookieToken', response.data.accessToken);
+				setCookie('AuthToken', response.data.accessToken);
 
 				const success = response.status === 201;
 				if (success) {

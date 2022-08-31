@@ -31,11 +31,10 @@ const Resetpassword = () => {
 			const success = response.status === 200;
 			if (success) {
 				removeCookie('UserId', cookies.UserId);
-				removeCookie('CookieToken', cookies.CookieToken);
+				removeCookie('AuthToken', cookies.AuthToken);
 				navigate('/');
 			}
-
-			window.location.reload();
+			// window.location.reload();
 		}
 		catch (err) {
 			console.log(err);

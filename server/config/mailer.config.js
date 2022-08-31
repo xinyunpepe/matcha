@@ -25,7 +25,7 @@ module.exports.sendConfirmEmail = (username, email, emailToken) => {
 		console.log('Confirmation email sent successfully');
 	})
 	.catch(err => {
-		console.log("Error: ", err);
+		console.log("Error: ", err); 
 	})
 }
 

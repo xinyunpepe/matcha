@@ -88,7 +88,8 @@ const Settings = ({ user }) => {
 			const response = await axios.put('http://localhost:8000/settings', { formData });
 			const success = response.status === 200;
 			if (success) {
-				navigate('/dashboard');
+				// navigate('/dashboard');
+				window.location.reload();
 			}
 		}
 		catch (err) {
@@ -98,7 +99,7 @@ const Settings = ({ user }) => {
 
 	const logout = () => {
 		removeCookie('UserId', cookies.UserId);
-		removeCookie('CookieToken', cookies.CookieToken);
+		removeCookie('AuthToken', cookies.AuthToken);
 		console.log("User is logged out successfully");
 		window.location.reload();
 	}
@@ -109,24 +110,24 @@ const Settings = ({ user }) => {
 				<form onSubmit={ handleSubmit }>
 					<section>
 						<p>DISCOVERY SETTINGS</p>
-						<div className="setting-label">
-							<label htmlFor="location">Location</label>
-							{/* { latitude }, { longitude } */}
-							{/* <p onClick={ getLocation }>{ address ? address : 'Choose Location' }</p> */}
-							<p onClick={ getLocation }>{ address } ▿</p>
-						</div>
 
-						<div className="setting-label">
-							<label htmlFor="distance">Maximum Distance</label>
-							{ distance } km
-						</div>
+						{/* TODO location filter */}
+						{/* <div className="setting-label"> */}
+							{/* <label htmlFor="location">Location</label> */}
+							{/* <p onClick={ getLocation }>{ address } ▿</p> */}
+						{/* </div> */}
 
-						<Slider
-							value={ distance }
-							onChange={ handleChangeDistance }
-							valueLabelDisplay="off"
-							style={ sliderStyle }
-						/>
+						{/* <div className="setting-label"> */}
+							{/* <label htmlFor="distance">Maximum Distance</label> */}
+							{/* { distance } km */}
+						{/* </div> */}
+
+						{/* <Slider */}
+							{/* value={ distance } */}
+							{/* onChange={ handleChangeDistance } */}
+							{/* valueLabelDisplay="off" */}
+							{/* style={ sliderStyle } */}
+						{/* /> */}
 
 						<div className="setting-label">
 							<label htmlFor='age-range'>Age Range</label>
@@ -139,9 +140,6 @@ const Settings = ({ user }) => {
 							valueLabelDisplay="off"
 							style={ sliderStyle }
 						/>
-
-						<p>NOTIFICATIONS</p>
-						<label htmlFor="email-notif">Email</label>
 
 						<input type="submit"/>
 						<button onClick={ logout }>Log Out</button>

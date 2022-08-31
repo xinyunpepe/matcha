@@ -7,18 +7,18 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
 const App = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(['user']);
+  const [cookies] = useCookies(['user']);
 
-  const cookieToken = cookies.CookieToken;
+  const authToken = cookies.AuthToken;
 
   return (
     // set up the path of pages
     <BrowserRouter>
       <Routes>
         <Route path="/" element={ <Home/> } />
-        { cookieToken && <Route path="/dashboard" element={ <Dashboard/> } /> }
-        { cookieToken && <Route path="/onboarding" element={ <Onboarding/> } /> }
-        { cookieToken && <Route path="/resetpassword" element={ <Resetpassword/> } /> }
+        { authToken && <Route path="/dashboard" element={ <Dashboard/> } /> }
+        { authToken && <Route path="/onboarding" element={ <Onboarding/> } /> }
+        { authToken && <Route path="/resetpassword" element={ <Resetpassword/> } /> }
       </Routes>
     </BrowserRouter>
   );

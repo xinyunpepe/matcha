@@ -30,7 +30,6 @@ const Onboarding = () => {
 	let navigate = useNavigate();
 
 	const handleCheckbox = (e) => {
-		// console.log(e.target.value);
 		let updatedList = [...checked];
 		if (e.target.checked) {
 			updatedList = [...checked, e.target.value];
@@ -178,14 +177,15 @@ const Onboarding = () => {
 							<label htmlFor="more-gender-id">More</label>
 						</div>
 
-						<label htmlFor="show-gender">Show gender on my profile</label>
-						<input
-							id="show-gender"
-							type="checkbox"
-							name="show_gender"
-							onChange={ handleChange }
-							checked={ formData.show_gender }
-						/>
+						<label htmlFor="show-gender">Show gender on my profile
+							<input
+								id="show-gender"
+								type="checkbox"
+								name="show_gender"
+								onChange={ handleChange }
+								checked={ formData.show_gender }
+							/>
+						</label>
 
 						<label>Show Me</label>
 						<div className="mul-input-container">
@@ -225,20 +225,21 @@ const Onboarding = () => {
 							value={ checkedPassions }
 						/>
 						<div className="mul-input-container">
-						{ passionsList?.map((item, index) => {
-							return (
-								<>
-									<input
-										key={ index }
-										type="checkbox"
-										name="passions"
-										value={ item }
-										onChange={ handleCheckbox }
-									/>
-									<label htmlFor={ item }>{ item }</label>
-								</>
-							)
-						})}
+							{ passionsList?.map((item, index) => {
+								return (
+									<>
+										<input
+											key={ index }
+											id={`checkbox-${ index }`}
+											type="checkbox"
+											name="passions"
+											value={ item }
+											onChange={ handleCheckbox }
+										/>
+										<label htmlFor={`checkbox-${ index }`}>{ item }</label>
+									</>
+								)
+							})}
 						</div>
 
 						<input type="submit"/>

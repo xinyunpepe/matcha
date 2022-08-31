@@ -45,14 +45,15 @@ const userSchema = new mongoose.Schema({
 			default: 'Point',
 		},
 		coordinates: {
-			type: [Number]
+			type: [Number],
+			default: [0, 0],
 		},
 	},
 	geographical_area: String,
 	distance: Number,
 	age_range: {
-		type: Array,
-		default: []
+		type: [Number],
+		default: [18, 100],
 	},
 	passions: {
 		type: Array,

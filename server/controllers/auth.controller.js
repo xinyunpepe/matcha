@@ -6,37 +6,53 @@ const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const nodemailer = require('../config/mailer.config');
 
-exports.signup = (req, res) => {
-	const { username, email, password } = req.body;
-	userModel.findOne({ username }).exec((err, users) => {
-		if (users) {
-			return res.status(400).json({ error: 'User exists already' });
-		}
-	})
-	userModel.findOne({ email }).exec((err, users) => {
-		if (users) {
-			return res.status(400).json({ error: 'Email exists already' });
-		}
-	})
+exports.signup = async (req, res) => {
+	try {
+		const { username, email, password, confirmPassword } = req.body;
 
-	const emailToken = jwt.sign({ email: req.body.email }, process.env.EMAIL_TOKEN);
-
-	const data = new userModel({
-		user_id: uuidv4(),
-		username: username,
-		email: email.toLowerCase(),
-		password: bcrypt.hashSync(password, 10),
-		confirm_code: emailToken
-	});
-
-	data.save((err) => {
-		if (err) {
-			res.status(500).json({ message: err });
-			return;
+		if (!username || !email || !password) {
+			return res.status(400).json({ msg: "Not all fields have been entered" });
 		}
-	});
-	nodemailer.sendConfirmEmail(username, email, emailToken);
-	res.send(data);
+
+		if (password.length < 8) {
+			return res.status(400).json({ msg: "Password minimum length 8" });
+		}
+
+		if (password !== confirmPassword) {
+			return res.status(400).json({ msg: "Passwords don't match" });
+		}
+
+		const existName = await userModel.findOne({ username: username });
+		if (existName) {
+				return res.status(400).json({ msg: 'User exists already' });
+		}
+
+		const existEmail = await userModel.findOne({ email: email });
+		if (existEmail) {
+				return res.status(400).json({ msg: 'Email exists already' });
+		}
+
+		const emailToken = jwt.sign({ email: req.body.email }, process.env.EMAIL_TOKEN);
+		const passwordHash = bcrypt.hashSync(password, 10);
+
+		const newUser = new userModel({
+			user_id: uuidv4(),
+			username: username,
+			email: email.toLowerCase(),
+			password: passwordHash,
+			confirm_code: emailToken
+		});
+
+		newUser.save()
+			.then(result => console.log(result))
+			.catch(err => console.log(err));
+
+		nodemailer.sendConfirmEmail(username, email, emailToken);
+		res.send(newUser);
+	}
+	catch(error) {
+		res.status(400).json({ err: error.message });
+	}
 }
 
 exports.activeUser = (req, res) => {
@@ -45,7 +61,6 @@ exports.activeUser = (req, res) => {
 			if (!users) {
 				return res.status(404).json({ message: "User Not found" });
 			}
-			// console.log(users);
 			users.status = "Active";
 			users.save((err) => {
 				if (err) {
@@ -55,12 +70,11 @@ exports.activeUser = (req, res) => {
 				}
 				console.log('User is signed up successfully');
 			});
-			// cookie
-			const cookieToken = jwt.sign({ email: users.email }, process.env.COOKIE_TOKEN, {
+			const authToken = jwt.sign({ email: users.email }, process.env.ACCESS_TOKEN, {
 				expiresIn: 60 * 24,
 			});
-			res.cookie('CookieToken', cookieToken, { expire: Date.now() + 60 * 24 });
 			res.cookie('UserId', users.user_id);
+			res.cookie('AuthToken', authToken, { expire: Date.now() + 60 * 24 });
 			res.redirect('http://localhost:3000/onboarding');
 		})
 		.catch((err) => {
@@ -96,7 +110,6 @@ exports.login = (req, res) => {
 exports.resetPassword = (req, res) => {
 	userModel.findOne({ email: req.body.email })
 		.then((users) => {
-			// console.log(users);
 			if (!users) {
 				return res.status(404).json({ message: "User not found" });
 			}
@@ -128,10 +141,10 @@ exports.verifyPassword = (req, res) => {
 			if (!resetPasswords) {
 				return res.status(404).json({ message: "Link expired already" });
 			}
-			const cookieToken = jwt.sign({ owner: resetPasswords.owner }, process.env.COOKIE_TOKEN, {
+			const authToken = jwt.sign({ owner: resetPasswords.owner }, process.env.ACCESS_TOKEN, {
 				expiresIn: 30,
 			});
-			res.cookie('CookieToken', cookieToken, { expire: Date.now() + 30 });
+			res.cookie('AuthToken', authToken, { expire: Date.now() + 30 });
 			res.cookie('UserId', resetPasswords.user_id);
 			res.redirect('http://localhost:3000/resetpassword');
 		})
@@ -178,7 +191,7 @@ exports.updateUser = (req, res) => {
 				age--;
 			}
 
-			users.age = age.parseInt();
+			users.age = parseInt(age);
 			users.first_name = formData.first_name;
 			users.last_name = formData.last_name;
 			users.birth_day = formData.birth_day;
@@ -222,20 +235,19 @@ exports.getUser = (req, res) => {
 
 exports.getFilteredUsers = (req, res) => {
 	const maxDistanceInMeters = req.query.distance * 1000;
-
 	userModel.find({
 			gender_identity: { $eq : req.query.gender },
 			// geographical_area: { $eq : req.query.area },
 			age: { $gte: req.query.age_from, $lte: req.query.age_to},
-			location: {
-				$near: {
-					$geometry: {
-						type: "Point",
-						coordinates: [req.query.lng, req.query.lat],
-					},
-					$maxDistance: maxDistanceInMeters,
-				},
-			},
+			// location: {
+			// 	$near: {
+			// 		$geometry: {
+			// 			type: "Point",
+			// 			coordinates: [req.query.lng, req.query.lat],
+			// 		},
+			// 		$maxDistance: maxDistanceInMeters,
+			// 	},
+			// },
 		})
 		.then((users) => {
 			if (!users) {
@@ -280,19 +292,15 @@ exports.updateSettings = (req, res) => {
 				return res.status(404).json({ message: "User Not found." });
 			}
 
-			users.location = {'type': 'Point', 'coordinates': formData.location};
-			users.geographical_area = formData.geographical_area;
-			users.distance = formData.distance;
+			// users.location = {'type': 'Point', 'coordinates': formData.location};
+			// users.geographical_area = formData.geographical_area;
+			// users.distance = formData.distance;
 			users.age_range = formData.age_range;
 
-			users.save((err) => {
-				if (err) {
-					console.log("Error in updating settings");
-					res.status(500).json({ message: err });
-					return;
-				}
-				console.log('Settings are updated successfully');
-			});
+			users.save()
+				.then(result => console.log(result))
+				.catch(err => console.log(err));
+
 			res.send(users);
 		})
 		.catch((err) => {
@@ -300,7 +308,6 @@ exports.updateSettings = (req, res) => {
 		});
 }
 
-// WHY ASYNC IS NECCESERY???
 exports.getMatchedUsers = async (req, res) => {
 	// console.log(JSON.parse(req.query.userIds));
 

@@ -41,8 +41,8 @@ const Dashboard = () => {
 					age_from: user?.age_range[0],
 					age_to: user?.age_range[1],
 					distance: user?.distance,
-					lng: user?.location.coordinates[0],
-					lat: user?.location.coordinates[1]
+					// lng: user?.location.coordinates[0],
+					// lat: user?.location.coordinates[1]
 				}
 			})
 			setFilteredUsers(response.data);
@@ -203,8 +203,8 @@ const Dashboard = () => {
 						</div>
 					}
 
-					{/* Edit info photos uploading page */}
-					{ isSettings && editInfo &&
+					{/* TODO: Edit info photos uploading page */}
+					{/*isSettings && editInfo &&
 						<div className='swipe-container'>
 							<div className='card'>
 								<div className='preview-img'>
@@ -231,7 +231,7 @@ const Dashboard = () => {
 								</div>
 							</div>
 					 	</div>
-					}
+					*/}
 				</div>
 			}
 		</>

@@ -1,13 +1,16 @@
 import { useCookies } from 'react-cookie';
+import { useNavigate } from "react-router-dom";
 
 const LeftHeader = ({ user, isSettings, setIsSettings }) => {
 	const [cookies, setCookie, removeCookie] = useCookies(['user']);
+	const navigate = useNavigate();
 
 	const logout = () => {
 		removeCookie('UserId', cookies.UserId);
-		removeCookie('CookieToken', cookies.CookieToken);
+		removeCookie('AuthToken', cookies.AuthToken);
 		console.log("User is logged out successfully");
-		window.location.reload();
+		// window.location.reload();
+		navigate('/');
 	}
 
 	const handleSettings = () => {

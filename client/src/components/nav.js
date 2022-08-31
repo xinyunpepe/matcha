@@ -1,5 +1,4 @@
 const Nav = ({ authToken, minimal, setShowModal, showModal, setIsSignup}) => {
-
 	const handleClick = () => {
 		setShowModal(true);
 		setIsSignup(false);

@@ -62,6 +62,8 @@ const ChatDisplay = ({ user, clickedUser }) => {
 	const decendingOrderedMessages = messages?.sort((a, b) =>
 		a.timestamp.localeCompare(b.timestamp));
 
+
+	// TODO: optimize chat layout
 	return (
 		<>
 			<Chat decendingOrderedMessages={ decendingOrderedMessages }/>

@@ -15,21 +15,20 @@ const Home = () => {
 	const [cookies, setCookie, removeCookie] = useCookies(['user']);
 
 	// determine login or not
-	const authToken = cookies.CookieToken;
+	const authToken = cookies.AuthToken;
 
 	// button handler
 	const handleClick = () => {
 		if (authToken) {
 			removeCookie('UserId', cookies.UserId);
-			removeCookie('CookieToken', cookies.CookieToken);
+			removeCookie('AuthToken', cookies.AuthToken);
 			console.log("User is logged out successfully");
 			window.location.reload();
-			return
+			return;
 		}
 		// once button clicked, the modal shows up
 		setShowModal(true);
 		setIsSignup(true);
-
 	}
 
 	return (
@@ -58,9 +57,7 @@ const Home = () => {
 					<AuthModal setShowModal={ setShowModal }
 					isSignup={ isSignup }/>
 				)}
-
 			</div>
-
 		</div>
 	)
 }

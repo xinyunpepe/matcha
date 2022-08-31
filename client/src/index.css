@@ -241,6 +241,10 @@ nav .logo-container .text-logo-green {
 	width: 100%;
 }
 
+.onboarding form #show-gender{
+	margin-left: 30px;
+}
+
 /* --- Dashboard page --- */
 .dashboard {
 	display: flex;
@@ -420,7 +424,7 @@ nav .logo-container .text-logo-green {
 /* --- Chat display --- */
 .chat-display,
 .matches-display {
-	padding: 20px;
+	padding: 30px;
 	height: 60vh;
 	overflow-y: auto;
 }

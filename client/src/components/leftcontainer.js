@@ -11,7 +11,7 @@ const LeftContainer = ({ user, isSettings, setIsSettings }) => {
 	return (
 		<>
 			<div className="left-container">
-				<LeftHeader user={ user } isSettings={ isSettings } setIsSettings={ setIsSettings } />
+				<LeftHeader user={ user } isSettings={ isSettings } setIsSettings={ setIsSettings }/>
 
 				{ !isSettings &&
 					<div>
